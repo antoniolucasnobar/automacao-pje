@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="noDesvio:jar">
+  <artifact type="jar" name="noDesvio:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/noDesvio_jar</output-path>
     <root id="archive" name="noDesvio.jar">
       <element id="module-output" name="noDesvio" />

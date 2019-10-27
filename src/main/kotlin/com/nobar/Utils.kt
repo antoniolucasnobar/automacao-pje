@@ -12,9 +12,10 @@ import java.util.*
 object Utils {
 
     private var properties: Properties? = null
-//    private val caminho = "/Users/lucas/IdeaProjects/noDesvio/src/main/resources/"
-    private val caminho = ""
-    fun loadProperties(): Unit {
+    //    private val caminho = "/Users/lucas/IdeaProjects/noDesvio/src/main/resources/"
+//    private val caminho = "./src/main/resources/"
+    private val caminho = "./"
+    fun loadProperties() {
         try {
             properties = Properties()
             val fis = FileInputStream(caminho + "config.properties")

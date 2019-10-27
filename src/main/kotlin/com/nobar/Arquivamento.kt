@@ -21,27 +21,25 @@ class Arquivamento(private val driver: WebDriver) {
     fun arquivar(processo: String) {
         val painelGlobal = PainelGlobal(driver)
         painelGlobal.abrirTarefa(processo)
-        // verifica se o processo esta bloqueado
-        driver?.manage()?.timeouts()?.implicitlyWait(1, TimeUnit.SECONDS)
-        val isPresent = driver.findElements(By.xpath("//mat-dialog-container//button[contains(.,'Sim')]")).size > 0
-        driver?.manage()?.timeouts()?.implicitlyWait(3, TimeUnit.SECONDS)
-        if (isPresent) {
-            val botaoDesbloqueioTarefa = driver?.findElement(By.xpath("//mat-dialog-container//button[contains(.,'Sim')]"))
-            botaoDesbloqueioTarefa?.isDisplayed?.let {
-                botaoDesbloqueioTarefa?.click()
-            }
-        }
 
-        val tarefa = Utils.getProperties("tarefaArquivamento")
-        val wait = WebDriverWait(driver, 10)
-        wait.until(
-            ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='cdk-overlay-backdrop cdk-overlay-dark-backdrop cdk-overlay-backdrop-showing']"))
-        )
-        val element = wait.until(
-            ExpectedConditions.elementToBeClickable(By.xpath("//button[@aria-label='$tarefa']"))
-        )
-        element.click()
+        val tarefas = Tarefa(driver)
+        tarefas.mover(processo,"Análise")
+        tarefas.mover(processo,"Arquivar o processo")
+
+        val tarefasLegado = TarefaLegado(driver)
+        tarefasLegado.mover(processo, "Arquivar definitivamente")
+
+//        val tarefa = Utils.getProperties("tarefaArquivamento")
+//        val wait = WebDriverWait(driver, 10)
+//        wait.until(
+//            ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='cdk-overlay-backdrop cdk-overlay-dark-backdrop cdk-overlay-backdrop-showing']"))
+//        )
+//        val element = wait.until(
+//            ExpectedConditions.elementToBeClickable(By.xpath("//button[@aria-label='$tarefa']"))
+//        )
+//        element.click()
     }
+
 
     fun podeExecutar(): Boolean{
         val properties = Utils.getProperties("executarArquivamento")
