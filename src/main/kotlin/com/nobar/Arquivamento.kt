@@ -16,7 +16,17 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 
 
 
-class Arquivamento(private val driver: WebDriver) {
+class Arquivamento(private val driver: WebDriver) : Acao {
+
+    override fun preparar() {
+        val papel = Utils.getProperties("papel")
+        val papeis = Papeis(driver)
+        papeis.trocar(papel)
+    }
+
+    override fun executar(processo: String) {
+        arquivar(processo)
+    }
 
     fun arquivar(processo: String) {
         val painelGlobal = PainelGlobal(driver)
@@ -44,15 +54,12 @@ class Arquivamento(private val driver: WebDriver) {
     fun podeExecutar(): Boolean{
         val properties = Utils.getProperties("executarArquivamento")
         return "Sim".equals(properties, true)
-
     }
 
 
     fun arquivarProcessos() {
         if (podeExecutar()) {
-            val papel = Utils.getProperties("papel")
-            val papeis = Papeis(driver)
-            papeis.trocar(papel)
+            preparar()
             Utils.getProcessos().forEach {
                 arquivar(it)
             }

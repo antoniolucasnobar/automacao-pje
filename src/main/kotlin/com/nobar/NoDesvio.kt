@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class NoDesvio(private val driver: WebDriver) {
+class NoDesvio(private val driver: WebDriver) : Acao {
 
     @FindBy(xpath = "//input[@id='inputNumeroProcesso']")
     private val numeroProcesso: WebElement? = null
@@ -29,7 +29,13 @@ class NoDesvio(private val driver: WebDriver) {
         return "Sim".equals(properties, true)
     }
 
+    override fun executar(processo: String) {
+        val justificativaNoDesvio = Utils.getProperties("justificativaNoDesvio")
+        enviar(processo, justificativaNoDesvio)
+    }
+
     fun enviar(processo: String, justificativaUsuario: String) {
+        driver.get(Utils.getURL("urlNoDesvio"))
         numeroProcesso?.sendKeys(processo)
         justificativa?.sendKeys(justificativaUsuario)
         driver?.manage()?.timeouts()?.implicitlyWait(1, TimeUnit.SECONDS)
@@ -53,17 +59,20 @@ class NoDesvio(private val driver: WebDriver) {
 
     fun enviarProcessos() {
         if (podeExecutar()) {
-            val adm = Utils.getProperties("papelAdm")
-            val papeis = Papeis(driver)
-            papeis.trocar(adm)
+            preparar()
             val justificativaNoDesvio = Utils.getProperties("justificativaNoDesvio")
             Utils.getProcessos().forEach {
-                driver.get(Utils.getURL("urlNoDesvio"))
                 enviar(it, justificativaNoDesvio)
             }
         } else {
             println("nao vai nao!")
         }
+    }
+
+    override fun preparar() {
+        val adm = Utils.getProperties("papelAdm")
+        val papeis = Papeis(driver)
+        papeis.trocar(adm)
     }
 
 }

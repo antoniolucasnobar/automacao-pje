@@ -13,8 +13,9 @@ object Utils {
 
     private var properties: Properties? = null
     //    private val caminho = "/Users/lucas/IdeaProjects/noDesvio/src/main/resources/"
-//    private val caminho = "./src/main/resources/"
-    private val caminho = "./"
+    private val caminho = "./src/main/resources/"
+//    private val caminho = "./"
+    public val geckoPath = caminho + "geckodriver.exe"
     fun loadProperties() {
         try {
             properties = Properties()
@@ -41,4 +42,6 @@ object Utils {
         File(caminho + "processos.txt").useLines { lines -> lines.forEach { lineList.add(it.trim()) }}
         return lineList
     }
+
+
 }
