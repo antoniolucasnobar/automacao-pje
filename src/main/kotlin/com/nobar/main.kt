@@ -1,22 +1,37 @@
 package com.nobar
 
-import org.openqa.selenium.WebDriver
+import com.vc.nobar.acao.Acao
+import com.vc.nobar.acao.dejt.DEJTCadastro
+import com.vc.nobar.acao.pje.Arquivamento
+import com.vc.nobar.acao.pje.NoDesvio
+import com.vc.nobar.gui.LoginScreen
+import javafx.application.Application
 import org.openqa.selenium.firefox.FirefoxDriver
 import java.util.concurrent.TimeUnit
 import org.openqa.selenium.firefox.FirefoxOptions
-import org.openqa.selenium.remote.DesiredCapabilities
+import tornadofx.App
+import tornadofx.View
+import tornadofx.group
+import tornadofx.label
 import java.io.File
 import java.lang.Exception
 import kotlin.reflect.KClass
 
 enum class Acoes(val kClass: KClass<out Acao>) {
     NODESVIO(NoDesvio::class),
-    ARQUIVAMENTO(Arquivamento::class)
+    ARQUIVAMENTO(Arquivamento::class),
+    DEJT(DEJTCadastro::class)
 
 
 }
 
+
+class LoginApp : App(LoginScreen::class)
+
 fun main(args: Array<String>) {
+
+//    Application.launch(LoginApp::class.java, *args)
+
 
     Utils.loadProperties()
     val ffOptions = FirefoxOptions()
@@ -24,13 +39,28 @@ fun main(args: Array<String>) {
     ffOptions.setCapability("marionette", true)
 //    "C:\\Selenium\\geckodriver.exe"
 //    val gecko = File(Utils.getProperties("gecko"))
-    val gecko = File(Utils.geckoPath)
-    println( gecko.canonicalPath)
-    System.setProperty("webdriver.gecko.driver",  gecko.canonicalPath)
+    //TODO ver como ajustar isso.
+//    val gecko = File(Utils.geckoPath)
+//    println( gecko.canonicalPath)
+//    System.setProperty("webdriver.gecko.driver",  gecko.canonicalPath)
 
     val driver = FirefoxDriver(ffOptions)
     driver.manage()?.timeouts()?.implicitlyWait(3, TimeUnit.SECONDS)
 //    driver?.manage()?.window()?.maximize()
+
+    val acoes2 = Utils.getProperties("acoes")
+//        "NoDesvio,Arquivamento"
+        .split(",")
+    acoes2.forEach { ac ->
+        val acaoEnum = Acoes.valueOf(ac.toUpperCase())
+        val acao = acaoEnum.kClass.constructors.first().call(driver)
+        println(acao)
+        acao.preparar()
+        acao.executar("")
+    }
+//    Thread.sleep(5000)
+//    driver.close()
+    return;
 
     driver.get(Utils.getURL("urlLegado"))
     val homePage = HomePage(driver)

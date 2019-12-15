@@ -22,7 +22,7 @@ class Papeis(private val driver: WebDriver) {
 //        val p = driver?.findElement(By.xpath("//button[contains(@name,'Painel Global')]"))
 //        p?.click()
         botaoTrocarPapel?.click()
-        val p2 = driver?.findElement(By.xpath("//button[@aria-label='$papel']"))
+        val p2 = driver.findElement(By.xpath("//button[@aria-label='$papel']"))
         p2?.click()
 
     }

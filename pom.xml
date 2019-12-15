@@ -3,12 +3,12 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.nobar</groupId>
-    <artifactId>noDesvio</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <groupId>com.vc.nobar</groupId>
+    <artifactId>automacao-pje</artifactId>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>com.nobar noDesvio</name>
+    <name>com.vc.nobar automacao-pje</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -73,6 +73,18 @@
             <artifactId>selenium-support</artifactId>
             <version>${selenium.version}</version>
         </dependency>
+<!-- pra ler excel -->
+        <dependency>
+            <groupId>com.github.ozlerhakan</groupId>
+            <artifactId>poiji</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+<!-- pra fazer a GUI-->
+        <dependency>
+            <groupId>no.tornado</groupId>
+            <artifactId>tornadofx</artifactId>
+            <version>1.7.17</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -84,6 +96,9 @@
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${kotlin.version}</version>
+                <configuration>
+                    <jvmTarget>1.8</jvmTarget>
+                </configuration>
                 <executions>
                     <execution>
                         <id>compile</id>

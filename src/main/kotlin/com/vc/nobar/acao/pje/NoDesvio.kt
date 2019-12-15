@@ -1,12 +1,14 @@
-package com.nobar
+package com.vc.nobar.acao.pje
 
+import com.nobar.Papeis
+import com.nobar.Utils
+import com.vc.nobar.acao.Acao
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.PageFactory
 import org.openqa.selenium.support.ui.WebDriverWait
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class NoDesvio(private val driver: WebDriver) : Acao {
@@ -67,6 +69,10 @@ class NoDesvio(private val driver: WebDriver) : Acao {
         } else {
             println("nao vai nao!")
         }
+    }
+
+    override fun getURL(): String {
+        return Utils.getURL("urlLegado");
     }
 
     override fun preparar() {

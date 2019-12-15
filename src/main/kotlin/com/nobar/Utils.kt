@@ -39,9 +39,14 @@ object Utils {
 
     fun getProcessos(): List<String> {
         val lineList = mutableListOf<String>()
-        File(caminho + "processos.txt").useLines { lines -> lines.forEach { lineList.add(it.trim()) }}
+       getFile( "processos.txt").useLines { lines -> lines.forEach { lineList.add(it.trim()) }}
         return lineList
     }
 
+    fun getFile(arquivo: String) : File {
+        return File(caminho + arquivo)
+    }
 
-}
+
+
+    }
