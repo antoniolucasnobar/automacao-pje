@@ -1,18 +1,14 @@
 package com.nobar
 
-import com.vc.nobar.acao.Acao
-import com.vc.nobar.acao.dejt.DEJTCadastro
-import com.vc.nobar.acao.pje.Arquivamento
-import com.vc.nobar.acao.pje.NoDesvio
+import com.vc.nobar.interfaces.Acao
+import com.vc.nobar.dejt.DEJTCadastro
+import com.vc.nobar.pje.Arquivamento
+import com.vc.nobar.pje.NoDesvio
 import com.vc.nobar.gui.LoginScreen
-import javafx.application.Application
 import org.openqa.selenium.firefox.FirefoxDriver
 import java.util.concurrent.TimeUnit
 import org.openqa.selenium.firefox.FirefoxOptions
 import tornadofx.App
-import tornadofx.View
-import tornadofx.group
-import tornadofx.label
 import java.io.File
 import java.lang.Exception
 import kotlin.reflect.KClass

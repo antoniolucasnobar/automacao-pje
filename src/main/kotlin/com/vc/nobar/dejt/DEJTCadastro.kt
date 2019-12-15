@@ -1,11 +1,11 @@
-package com.vc.nobar.acao.dejt
+package com.vc.nobar.dejt
 
 import com.nobar.*
-import com.vc.nobar.Pagina
-import com.vc.nobar.acao.Acao
-import com.vc.nobar.acao.dejt.paginas.CadastroUsuario
-import com.vc.nobar.acao.dejt.paginas.LoginDEJT
-import com.vc.nobar.acao.dejt.paginas.PaginaInicialDEJT
+import com.vc.nobar.interfaces.Pagina
+import com.vc.nobar.interfaces.Acao
+import com.vc.nobar.dejt.paginas.CadastroUsuario
+import com.vc.nobar.dejt.paginas.LoginDEJT
+import com.vc.nobar.dejt.paginas.PaginaInicialDEJT
 import org.openqa.selenium.WebDriver
 
 

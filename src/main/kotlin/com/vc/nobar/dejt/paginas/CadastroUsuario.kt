@@ -1,9 +1,9 @@
-package com.vc.nobar.acao.dejt.paginas
+package com.vc.nobar.dejt.paginas
 
 import com.nobar.Utils
 import com.poiji.bind.Poiji
-import com.vc.nobar.Pagina
-import com.vc.nobar.acao.dejt.UsuarioDEJT
+import com.vc.nobar.interfaces.Pagina
+import com.vc.nobar.dejt.UsuarioDEJT
 import org.openqa.selenium.*
 import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.PageFactory

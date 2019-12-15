@@ -1,4 +1,4 @@
-package com.vc.nobar.acao.dejt
+package com.vc.nobar.dejt
 
 import com.poiji.annotation.ExcelCell
 

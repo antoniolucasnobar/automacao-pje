@@ -1,7 +1,7 @@
-package com.vc.nobar.acao.pje
+package com.vc.nobar.pje
 
 import com.nobar.*
-import com.vc.nobar.acao.Acao
+import com.vc.nobar.interfaces.Acao
 import org.openqa.selenium.WebDriver
 
 

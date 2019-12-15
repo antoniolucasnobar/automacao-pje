@@ -1,8 +1,8 @@
-package com.vc.nobar.acao.pje
+package com.vc.nobar.pje
 
 import com.nobar.Papeis
 import com.nobar.Utils
-import com.vc.nobar.acao.Acao
+import com.vc.nobar.interfaces.Acao
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement

@@ -1,4 +1,4 @@
-package com.vc.nobar.acao
+package com.vc.nobar.interfaces
 
 interface Acao {
     fun getURL(): String

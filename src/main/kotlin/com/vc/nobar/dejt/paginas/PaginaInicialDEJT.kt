@@ -1,7 +1,6 @@
-package com.vc.nobar.acao.dejt.paginas
+package com.vc.nobar.dejt.paginas
 
-import com.nobar.Utils
-import com.vc.nobar.Pagina
+import com.vc.nobar.interfaces.Pagina
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
