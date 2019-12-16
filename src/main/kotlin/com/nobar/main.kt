@@ -5,6 +5,8 @@ import com.vc.nobar.dejt.DEJTCadastro
 import com.vc.nobar.pje.Arquivamento
 import com.vc.nobar.pje.NoDesvio
 import com.vc.nobar.gui.LoginScreen
+import javafx.application.Application
+import org.openqa.selenium.WebDriver
 import org.openqa.selenium.firefox.FirefoxDriver
 import java.util.concurrent.TimeUnit
 import org.openqa.selenium.firefox.FirefoxOptions
@@ -13,12 +15,18 @@ import java.io.File
 import java.lang.Exception
 import kotlin.reflect.KClass
 
-enum class Acoes(val kClass: KClass<out Acao>) {
-    NODESVIO(NoDesvio::class),
-    ARQUIVAMENTO(Arquivamento::class),
-    DEJT(DEJTCadastro::class)
+enum class Acoes(val kClass: KClass<out Acao>, val ativado: Boolean) {
+    DEJT(DEJTCadastro::class, true),
+    NODESVIO(NoDesvio::class, false),
+    ARQUIVAMENTO(Arquivamento::class, false);
 
-
+    fun getAcao(
+        driver: WebDriver,
+        loginTxt: String,
+        passwordTxt: String
+    ): Acao {
+        return kClass.constructors.first().call(driver, loginTxt, passwordTxt)
+    }
 }
 
 
@@ -26,24 +34,14 @@ class LoginApp : App(LoginScreen::class)
 
 fun main(args: Array<String>) {
 
-//    Application.launch(LoginApp::class.java, *args)
+    Application.launch(LoginApp::class.java, *args)
+    return;
 
 
     Utils.loadProperties()
-    val ffOptions = FirefoxOptions()
-    ffOptions.addPreference("browser.link.open_newwindow", 1)
-    ffOptions.setCapability("marionette", true)
-//    "C:\\Selenium\\geckodriver.exe"
-//    val gecko = File(Utils.getProperties("gecko"))
-    //TODO ver como ajustar isso.
-//    val gecko = File(Utils.geckoPath)
-//    println( gecko.canonicalPath)
-//    System.setProperty("webdriver.gecko.driver",  gecko.canonicalPath)
-
-    val driver = FirefoxDriver(ffOptions)
-    driver.manage()?.timeouts()?.implicitlyWait(3, TimeUnit.SECONDS)
 //    driver?.manage()?.window()?.maximize()
 
+    val driver = Utils.getDriver()
     val acoes2 = Utils.getProperties("acoes")
 //        "NoDesvio,Arquivamento"
         .split(",")
@@ -56,8 +54,6 @@ fun main(args: Array<String>) {
     }
 //    Thread.sleep(5000)
 //    driver.close()
-    return;
-
     driver.get(Utils.getURL("urlLegado"))
     val homePage = HomePage(driver)
 

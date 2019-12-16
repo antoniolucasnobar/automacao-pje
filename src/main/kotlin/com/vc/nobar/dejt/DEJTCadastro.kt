@@ -1,16 +1,22 @@
 package com.vc.nobar.dejt
 
-import com.nobar.*
+import com.poiji.bind.Poiji
 import com.vc.nobar.interfaces.Pagina
 import com.vc.nobar.interfaces.Acao
 import com.vc.nobar.dejt.paginas.CadastroUsuario
 import com.vc.nobar.dejt.paginas.LoginDEJT
 import com.vc.nobar.dejt.paginas.PaginaInicialDEJT
 import org.openqa.selenium.WebDriver
+import java.io.File
 
 
-class DEJTCadastro(private val driver: WebDriver) : Acao {
+class DEJTCadastro(
+    private val driver: WebDriver,
+    private val loginTxt: String,
+    private val passwordTxt: String
+) : Acao {
 
+    private lateinit var users: List<UsuarioDEJT>
     private val paginas = ArrayList<Pagina>()
 
 
@@ -18,54 +24,27 @@ class DEJTCadastro(private val driver: WebDriver) : Acao {
         return "https://dejt.jt.jus.br/dejt/";
     }
 
+    override fun processarArquivo(file: File) {
+        users = Poiji.fromExcel(file, UsuarioDEJT::class.java)
+        users.forEachIndexed{index, element -> println("index = ${index+2}, element = $element")}
+//        println(users)
+        println(users.size)
+
+    }
+
     override fun preparar() {
-        driver.get(this.getURL())
         paginas.add(PaginaInicialDEJT(driver))
-        paginas.add(LoginDEJT(driver))
-        paginas.add(CadastroUsuario(driver))
+        paginas.add(LoginDEJT(driver, loginTxt, passwordTxt))
+        paginas.add(CadastroUsuario(driver, users))
     }
 
     override fun executar(processo: String) {
-        paginas.forEach(Pagina::executar)
-    }
-
-    fun arquivar(processo: String) {
-        val painelGlobal = PainelGlobal(driver)
-        painelGlobal.abrirTarefa(processo)
-
-        val tarefas = Tarefa(driver)
-        tarefas.mover(processo,"Análise")
-        tarefas.mover(processo,"Arquivar o processo")
-
-        val tarefasLegado = TarefaLegado(driver)
-        tarefasLegado.mover(processo, "Arquivar definitivamente")
-
-//        val tarefa = Utils.getProperties("tarefaArquivamento")
-//        val wait = WebDriverWait(driver, 10)
-//        wait.until(
-//            ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='cdk-overlay-backdrop cdk-overlay-dark-backdrop cdk-overlay-backdrop-showing']"))
-//        )
-//        val element = wait.until(
-//            ExpectedConditions.elementToBeClickable(By.xpath("//button[@aria-label='$tarefa']"))
-//        )
-//        element.click()
-    }
-
-
-    fun podeExecutar(): Boolean{
-        val properties = Utils.getProperties("executarArquivamento")
-        return "Sim".equals(properties, true)
-    }
-
-
-    fun arquivarProcessos() {
-        if (podeExecutar()) {
-            preparar()
-            Utils.getProcessos().forEach {
-                arquivar(it)
-            }
-        } else {
-            println("nao vai tambem nao")
+        try {
+            driver.get(this.getURL())
+            paginas.forEach(Pagina::executar)
+        } finally {
+            driver.close()
         }
     }
+
 }

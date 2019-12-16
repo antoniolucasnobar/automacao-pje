@@ -3,11 +3,16 @@ package com.vc.nobar.pje
 import com.nobar.*
 import com.vc.nobar.interfaces.Acao
 import org.openqa.selenium.WebDriver
+import java.io.File
 
 
 class Arquivamento(private val driver: WebDriver) : Acao {
     override fun getURL(): String {
         return Utils.getURL("urlLegado");
+    }
+
+    override fun processarArquivo(file: File) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun preparar() {

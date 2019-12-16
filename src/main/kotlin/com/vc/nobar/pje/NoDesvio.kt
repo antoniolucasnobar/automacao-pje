@@ -9,6 +9,7 @@ import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.PageFactory
 import org.openqa.selenium.support.ui.WebDriverWait
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 class NoDesvio(private val driver: WebDriver) : Acao {
@@ -73,6 +74,10 @@ class NoDesvio(private val driver: WebDriver) : Acao {
 
     override fun getURL(): String {
         return Utils.getURL("urlLegado");
+    }
+
+    override fun processarArquivo(file: File) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun preparar() {

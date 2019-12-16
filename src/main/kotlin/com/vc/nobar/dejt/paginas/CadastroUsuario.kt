@@ -1,7 +1,5 @@
 package com.vc.nobar.dejt.paginas
 
-import com.nobar.Utils
-import com.poiji.bind.Poiji
 import com.vc.nobar.interfaces.Pagina
 import com.vc.nobar.dejt.UsuarioDEJT
 import org.openqa.selenium.*
@@ -12,7 +10,7 @@ import org.openqa.selenium.support.ui.Select
 import org.openqa.selenium.support.ui.WebDriverWait
 
 
-class CadastroUsuario(private val driver: WebDriver): Pagina {
+class CadastroUsuario(private val driver: WebDriver, private val usuarios: List<UsuarioDEJT>): Pagina {
 
     @FindBy(xpath = "//a[contains(.,'Usuário')]")
     private val botaoCadastroUsuario: WebElement? = null
@@ -38,22 +36,10 @@ class CadastroUsuario(private val driver: WebDriver): Pagina {
     @FindBy(xpath = "//button[@id='corpo:formulario:botaoIncluirTodasUnidades']")
     private val botaoIncluirTodasUnidades: WebElement? = null
 
-    private val usuarios: List<UsuarioDEJT>
-
-
     init {
         PageFactory.initElements(driver, this)
-        usuarios = carregarUsuarios(Utils.getProperties("usuariosDEJT"))
     }
 
-    private fun carregarUsuarios(arquivoUsuarios: String): List<UsuarioDEJT> {
-        val users = Poiji.fromExcel(Utils.getFile(arquivoUsuarios), UsuarioDEJT::class.java)
-        users.forEachIndexed{index, element -> println("index = ${index+2}, element = $element")}
-//        println(users)
-        println(users.size)
-
-        return users
-    }
 
     override fun executar() {
 //        val lucas = UsuarioDEJT("Antonio Lucas Neres de Oliveira",
