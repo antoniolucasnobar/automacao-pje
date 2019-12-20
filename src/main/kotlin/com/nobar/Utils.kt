@@ -71,7 +71,7 @@ object Utils {
                 os = "mac"
             }
             SystemUtils.IS_OS_WINDOWS -> {
-                os = "mac"
+                os = "windows"
                 suffix = ".exe"
             }
             SystemUtils.IS_OS_LINUX -> {
