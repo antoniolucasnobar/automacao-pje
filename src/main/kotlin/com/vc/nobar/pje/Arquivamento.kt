@@ -1,6 +1,7 @@
 package com.vc.nobar.pje
 
 import com.nobar.*
+import com.vc.nobar.interfaces.ItemProcessamento
 import com.vc.nobar.interfaces.Acao
 import org.openqa.selenium.WebDriver
 import java.io.File
@@ -11,7 +12,7 @@ class Arquivamento(private val driver: WebDriver) : Acao {
         return Utils.getURL("urlLegado");
     }
 
-    override fun processarArquivo(file: File) {
+    override fun processarArquivo(file: File): List<ItemProcessamento> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -21,8 +22,8 @@ class Arquivamento(private val driver: WebDriver) : Acao {
         papeis.trocar(papel)
     }
 
-    override fun executar(processo: String) {
-        arquivar(processo)
+    override fun executar(item: ItemProcessamento?) {
+        arquivar(item?.getItem().toString())
     }
 
     fun arquivar(processo: String) {

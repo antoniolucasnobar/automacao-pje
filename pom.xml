@@ -5,7 +5,7 @@
 
     <groupId>com.vc.nobar</groupId>
     <artifactId>automacao-pje</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.7</version>
     <packaging>jar</packaging>
 
     <name>com.vc.nobar automacao-pje</name>

@@ -6,6 +6,7 @@ import com.vc.nobar.interfaces.Acao
 import com.vc.nobar.dejt.paginas.CadastroUsuario
 import com.vc.nobar.dejt.paginas.LoginDEJT
 import com.vc.nobar.dejt.paginas.PaginaInicialDEJT
+import com.vc.nobar.interfaces.ItemProcessamento
 import org.openqa.selenium.WebDriver
 import java.io.File
 
@@ -24,27 +25,29 @@ class DEJTCadastro(
         return "https://dejt.jt.jus.br/dejt/";
     }
 
-    override fun processarArquivo(file: File) {
+    override fun processarArquivo(file: File): List<ItemProcessamento> {
         users = Poiji.fromExcel(file, UsuarioDEJT::class.java)
-        users.forEachIndexed{index, element -> println("index = ${index+2}, element = $element")}
+//        users.forEachIndexed{index, element -> println("index = ${index+2}, element = $element")}
 //        println(users)
         println(users.size)
+        return users;
 
     }
 
     override fun preparar() {
-        paginas.add(PaginaInicialDEJT(driver))
-        paginas.add(LoginDEJT(driver, loginTxt, passwordTxt))
-        paginas.add(CadastroUsuario(driver, users))
+        driver.get(this.getURL())
+        PaginaInicialDEJT(driver).executar(null)
+        LoginDEJT(driver, loginTxt, passwordTxt).executar(null)
     }
 
-    override fun executar(processo: String) {
-        try {
-            driver.get(this.getURL())
-            paginas.forEach(Pagina::executar)
-        } finally {
-            driver.close()
-        }
+    override fun executar(item: ItemProcessamento?) {
+//        try {
+            CadastroUsuario(driver, users).executar(item)
+//            paginas.forEach(Pagina::executar)
+//        }
+//        finally {
+//            driver.close()
+//        }
     }
 
 }

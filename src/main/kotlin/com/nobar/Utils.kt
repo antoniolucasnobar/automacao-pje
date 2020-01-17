@@ -15,10 +15,11 @@ import java.util.concurrent.TimeUnit
 
 
 object Utils {
-
+    const val TIMEOUT = 60L
+    var msg = ""
+    var convites: Int = 0;
     private var properties: Properties? = null
-    //    private val caminho = "/Users/lucas/IdeaProjects/noDesvio/src/main/resources/"
-    private val caminho = "./src/main/resources/"
+    private const val caminho = "./src/main/resources/"
 //    private val caminho = "./"
     public val geckoPath = caminho + "geckodriver.exe"
     fun loadProperties() {

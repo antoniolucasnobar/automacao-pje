@@ -1,7 +1,10 @@
 package com.vc.nobar.pje
 
+import com.nobar.HomePage
 import com.nobar.Papeis
 import com.nobar.Utils
+import com.poiji.bind.Poiji
+import com.vc.nobar.interfaces.ItemProcessamento
 import com.vc.nobar.interfaces.Acao
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
@@ -32,9 +35,10 @@ class NoDesvio(private val driver: WebDriver) : Acao {
         return "Sim".equals(properties, true)
     }
 
-    override fun executar(processo: String) {
-        val justificativaNoDesvio = Utils.getProperties("justificativaNoDesvio")
-        enviar(processo, justificativaNoDesvio)
+    override fun executar(item: ItemProcessamento?) {
+//        val justificativaNoDesvio = Utils.getProperties("justificativaNoDesvio")
+//        enviar(item.getItem().toString(), justificativaNoDesvio)
+        enviarProcessos()
     }
 
     fun enviar(processo: String, justificativaUsuario: String) {
@@ -76,11 +80,20 @@ class NoDesvio(private val driver: WebDriver) : Acao {
         return Utils.getURL("urlLegado");
     }
 
-    override fun processarArquivo(file: File) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun processarArquivo(file: File): List<ItemProcessamento> {
+        val processos = Poiji.fromExcel(file, Processo::class.java)
+        processos.forEachIndexed{index, element -> println("index = ${index}, element = $element")}
+        return processos
     }
 
     override fun preparar() {
+        driver.get(Utils.getURL("urlLegado"))
+        val homePage = HomePage(driver)
+
+        val login = Utils.getProperties("login")
+        val password = Utils.getProperties("password")
+        homePage.login(login, password)
+
         val adm = Utils.getProperties("papelAdm")
         val papeis = Papeis(driver)
         papeis.trocar(adm)

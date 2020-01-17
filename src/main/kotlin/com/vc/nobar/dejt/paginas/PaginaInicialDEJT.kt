@@ -1,5 +1,7 @@
 package com.vc.nobar.dejt.paginas
 
+import com.nobar.Utils
+import com.vc.nobar.interfaces.ItemProcessamento
 import com.vc.nobar.interfaces.Pagina
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
@@ -16,8 +18,8 @@ class PaginaInicialDEJT(private val driver: WebDriver): Pagina {
         PageFactory.initElements(driver, this)
     }
 
-    override fun executar() {
-        WebDriverWait(driver, 10).until {
+    override fun executar(item: ItemProcessamento?) {
+        WebDriverWait(driver, Utils.TIMEOUT).until {
             botaoTelaLogin?.isEnabled
         }
         botaoTelaLogin?.click()

@@ -1,5 +1,7 @@
 package com.vc.nobar.dejt.paginas
 
+import com.nobar.Utils
+import com.vc.nobar.interfaces.ItemProcessamento
 import com.vc.nobar.interfaces.Pagina
 import com.vc.nobar.dejt.UsuarioDEJT
 import org.openqa.selenium.*
@@ -14,6 +16,10 @@ class CadastroUsuario(private val driver: WebDriver, private val usuarios: List<
 
     @FindBy(xpath = "//a[contains(.,'Usuário')]")
     private val botaoCadastroUsuario: WebElement? = null
+
+    @FindBy(xpath = "//input[@id='corpo:formulario:id']")
+    private val codigo: WebElement? = null
+
 
     @FindBy(xpath = "//input[@id='corpo:formulario:cpf']")
     private val cpf: WebElement? = null
@@ -41,7 +47,7 @@ class CadastroUsuario(private val driver: WebDriver, private val usuarios: List<
     }
 
 
-    override fun executar() {
+    fun executar() {
 //        val lucas = UsuarioDEJT("Antonio Lucas Neres de Oliveira",
 //            "024.107.755-94", "antonio.lucas@trt4.jus.br")
 //        val cris = UsuarioDEJT("Cristina Bottega",
@@ -54,23 +60,45 @@ class CadastroUsuario(private val driver: WebDriver, private val usuarios: List<
     }
 
     private fun adicionarUsuarioDEJT(usuario: UsuarioDEJT) {
-        WebDriverWait(driver, 10).until {
+        WebDriverWait(driver, Utils.TIMEOUT).until {
             botaoCadastroUsuario?.isEnabled
         }
         botaoCadastroUsuario?.click()
 
 //        this.botaoNovoCadastro?.click()
-        WebDriverWait(driver, 10).until {
+        WebDriverWait(driver, Utils.TIMEOUT).until {
             this.cpf?.isEnabled
         }
         val jse = driver as JavascriptExecutor
         jse.executeScript("document.getElementById('corpo:formulario:cpf').value='${usuario.cpf}';")
         this.cpf?.sendKeys(Keys.TAB);
 
-        val wait = WebDriverWait(driver, 10)
+        val wait = WebDriverWait(driver, Utils.TIMEOUT)
         wait.until(
             ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='simplemodal-overlay']"))
         )
+
+        val cod = codigo?.getAttribute("value")
+        println("$cod|$usuario")
+
+        if (!cod.isNullOrBlank()) {
+            println("ja cadastrado! nao faz nada.")
+            Utils.msg = "(cadastro feito anteriormente)"
+
+            val reenviarConvite = driver.findElement(By.xpath("//button[contains(.,'Reenviar Convite')]"))
+
+            if (reenviarConvite != null) {
+                println("enviando convite para ${usuario.nome}")
+                reenviarConvite.click()
+                Utils.convites++;
+                wait.until(
+                    ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(.,'Convite enviado com sucesso!')]"))
+                )
+            }
+            return;
+        }
+        println("nao cadastrado! cadastro agora")
+
 
 
         this.nome?.text.isNullOrBlank().let {
@@ -84,8 +112,23 @@ class CadastroUsuario(private val driver: WebDriver, private val usuarios: List<
         val dropdown = Select(perfil)
         dropdown.selectByVisibleText("Publicador")
         this.botaoSalvar?.click()
+        wait.until(
+            ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(.,'Registro gravado com sucesso')]"))
+        )
         this.botaoIncluirTodasUnidades?.click()
+        wait.until(
+            ExpectedConditions.invisibilityOfElementLocated(By.xpath("//p[contains(.,'Registro gravado com sucesso')]"))
+        )
         this.botaoSalvar?.click()
+        wait.until(
+            ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(.,'Registro gravado com sucesso')]"))
+        )
+        println("cadastro feito com sucesso!")
+        Utils.msg = "(cadastro OK)"
 
+    }
+
+    override fun executar(item: ItemProcessamento?) {
+        adicionarUsuarioDEJT(item?.getItem() as UsuarioDEJT)
     }
 }

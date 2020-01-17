@@ -1,5 +1,7 @@
 package com.vc.nobar.dejt.paginas
 
+import com.nobar.Utils
+import com.vc.nobar.interfaces.ItemProcessamento
 import com.vc.nobar.interfaces.Pagina
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
@@ -27,11 +29,11 @@ class LoginDEJT(
         PageFactory.initElements(driver, this)
     }
 
-    override fun executar() {
+    override fun executar(item: ItemProcessamento?) {
         login?.sendKeys(loginTxt)
         password?.sendKeys(passwordTxt)
 
-        WebDriverWait(driver, 10).until {
+        WebDriverWait(driver, Utils.TIMEOUT).until {
             botaoTelaLogin?.isEnabled
         }
         botaoTelaLogin?.click()
