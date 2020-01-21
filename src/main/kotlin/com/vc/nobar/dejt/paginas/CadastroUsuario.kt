@@ -47,16 +47,23 @@ class CadastroUsuario(private val driver: WebDriver, private val usuarios: List<
     }
 
 
-    fun executar() {
-//        val lucas = UsuarioDEJT("Antonio Lucas Neres de Oliveira",
-//            "024.107.755-94", "antonio.lucas@trt4.jus.br")
-//        val cris = UsuarioDEJT("Cristina Bottega",
-//            "954.274.900-78", "cbottega@trt4.jus.br")
-//       val usuarios = ArrayList<UsuarioDEJT>();
-//        usuarios.add(lucas)
-//        usuarios.add(cris)
-        usuarios.forEach {adicionarUsuarioDEJT(it)}
-//        adicionarUsuarioDEJT(lucas)
+    fun executar(): Boolean {
+//        usuarios.forEach {adicionarUsuarioDEJT(it)}
+        println("comecando na linha ${Utils.avanco}")
+        usuarios.forEachIndexed { index, element ->
+            if (index >= Utils.avanco) {
+                try {
+                    adicionarUsuarioDEJT(element)
+                    Utils.avanco++
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    println("Erro na linha $index - $element. Vamos tentar continuar dessa linha")
+                    Utils.writeAvanco()
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private fun adicionarUsuarioDEJT(usuario: UsuarioDEJT) {
@@ -85,9 +92,10 @@ class CadastroUsuario(private val driver: WebDriver, private val usuarios: List<
             println("ja cadastrado! nao faz nada.")
             Utils.msg = "(cadastro feito anteriormente)"
 
-            val reenviarConvite = driver.findElement(By.xpath("//button[contains(.,'Reenviar Convite')]"))
+            val precisaEnviarConvite = driver.findElements(By.xpath("//button[contains(.,'Reenviar Convite')]")).size > 0
 
-            if (reenviarConvite != null) {
+            if (precisaEnviarConvite) {
+                val reenviarConvite = driver.findElement(By.xpath("//button[contains(.,'Reenviar Convite')]"))
                 println("enviando convite para ${usuario.nome}")
                 reenviarConvite.click()
                 Utils.convites++;
@@ -95,6 +103,7 @@ class CadastroUsuario(private val driver: WebDriver, private val usuarios: List<
                     ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(.,'Convite enviado com sucesso!')]"))
                 )
             }
+            incluirTodasUnidades(wait)
             return;
         }
         println("nao cadastrado! cadastro agora")
@@ -115,17 +124,21 @@ class CadastroUsuario(private val driver: WebDriver, private val usuarios: List<
         wait.until(
             ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(.,'Registro gravado com sucesso')]"))
         )
+        incluirTodasUnidades(wait)
+        println("cadastro feito com sucesso!")
+        Utils.msg = "(cadastro OK)"
+
+    }
+
+    private fun incluirTodasUnidades(wait: WebDriverWait) {
         this.botaoIncluirTodasUnidades?.click()
-        wait.until(
-            ExpectedConditions.invisibilityOfElementLocated(By.xpath("//p[contains(.,'Registro gravado com sucesso')]"))
-        )
+//        wait.until(
+//            ExpectedConditions.invisibilityOfElementLocated(By.xpath("//p[contains(.,'Registro gravado com sucesso')]"))
+//        )
         this.botaoSalvar?.click()
         wait.until(
             ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(.,'Registro gravado com sucesso')]"))
         )
-        println("cadastro feito com sucesso!")
-        Utils.msg = "(cadastro OK)"
-
     }
 
     override fun executar(item: ItemProcessamento?) {

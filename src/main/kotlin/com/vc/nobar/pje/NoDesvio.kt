@@ -82,7 +82,7 @@ class NoDesvio(private val driver: WebDriver) : Acao {
 
     override fun processarArquivo(file: File): List<ItemProcessamento> {
         val processos = Poiji.fromExcel(file, Processo::class.java)
-        processos.forEachIndexed{index, element -> println("index = ${index}, element = $element")}
+//        processos.forEachIndexed{index, element -> println("index = ${index}, element = $element")}
         return processos
     }
 

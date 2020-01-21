@@ -5,7 +5,6 @@ import com.vc.nobar.dejt.DEJTCadastro
 import com.vc.nobar.pje.Arquivamento
 import com.vc.nobar.pje.NoDesvio
 import com.vc.nobar.gui.LoginScreen
-import javafx.application.Application
 import org.openqa.selenium.WebDriver
 import tornadofx.App
 import kotlin.reflect.KClass
@@ -14,6 +13,14 @@ enum class Acoes(val kClass: KClass<out Acao>, val ativado: Boolean) {
     DEJT(DEJTCadastro::class, true),
     NODESVIO(NoDesvio::class, false),
     ARQUIVAMENTO(Arquivamento::class, false);
+
+    fun getAcao(
+        driver: WebDriver
+    ): Acao {
+        val loginTxt: String = Utils.getProperties("login")
+        val passwordTxt: String = Utils.getProperties("password")
+        return kClass.constructors.first().call(driver, loginTxt, passwordTxt)
+    }
 
     fun getAcao(
         driver: WebDriver,
@@ -29,24 +36,21 @@ class LoginApp : App(LoginScreen::class)
 
 fun main(args: Array<String>) {
 
-    Application.launch(LoginApp::class.java, *args)
-    return
+//    Application.launch(LoginApp::class.java, *args)
+//    return;
 
 
-//    Utils.loadProperties()
-////    driver?.manage()?.window()?.maximize()
-//
-//    val driver = Utils.getDriver()
-//    val acoes2 = Utils.getProperties("acoes")
-////        "NoDesvio,Arquivamento"
-//        .split(",")
-//    acoes2.forEach { ac ->
-//        val acaoEnum = Acoes.valueOf(ac.toUpperCase())
+    Utils.loadProperties()
+    val driver = Utils.getDriver()
+    val acoes = Utils.getProperties("acoes")
+        .split(",")
+    acoes.forEach { ac ->
+        val acaoEnum = Acoes.valueOf(ac.toUpperCase())
 //        val acao = acaoEnum.kClass.constructors.first().call(driver)
-//        println(acao)
-////        acao.preparar()
-//        acao.executar(null)
-//    }
+        val acao = acaoEnum.getAcao(driver)
+        println(acao)
+        acao.executar(null)
+    }
 ////    Thread.sleep(5000)
 ////    driver.close()
 //    driver.get(Utils.getURL("urlLegado"))

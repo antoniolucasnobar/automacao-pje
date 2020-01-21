@@ -1,5 +1,6 @@
 package com.vc.nobar.dejt
 
+import com.nobar.Utils
 import com.poiji.bind.Poiji
 import com.vc.nobar.interfaces.Pagina
 import com.vc.nobar.interfaces.Acao
@@ -12,7 +13,7 @@ import java.io.File
 
 
 class DEJTCadastro(
-    private val driver: WebDriver,
+    private var driver: WebDriver,
     private val loginTxt: String,
     private val passwordTxt: String
 ) : Acao {
@@ -41,13 +42,16 @@ class DEJTCadastro(
     }
 
     override fun executar(item: ItemProcessamento?) {
-//        try {
-            CadastroUsuario(driver, users).executar(item)
-//            paginas.forEach(Pagina::executar)
-//        }
-//        finally {
-//            driver.close()
-//        }
+        processarArquivo(Utils.getFile())
+        var terminou = false
+        while (!terminou) {
+            try {
+                preparar()
+                terminou = CadastroUsuario(driver, users).executar()
+            } finally {
+                driver.close()
+                driver = Utils.getDriver()
+            }
+        }
     }
-
 }

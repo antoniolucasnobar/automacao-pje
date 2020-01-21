@@ -4,10 +4,7 @@ import org.apache.commons.lang3.SystemUtils
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxOptions
-import java.io.File
-import java.io.FileInputStream
-import java.io.IOException
-import java.io.InputStreamReader
+import java.io.*
 import java.net.URI
 import java.nio.charset.Charset
 import java.util.*
@@ -18,20 +15,38 @@ object Utils {
     const val TIMEOUT = 60L
     var msg = ""
     var convites: Int = 0;
-    private var properties: Properties? = null
-    private const val caminho = "./src/main/resources/"
-//    private val caminho = "./"
-    public val geckoPath = caminho + "geckodriver.exe"
+    var avanco: Int = 0;
+    private var properties = Properties()
+    private const val caminho1 = "./src/main/resources/"
+    private var caminho = "./"
+
+    fun getConfigFile(): FileInputStream? {
+        var fis: FileInputStream? = null
+        try {
+            fis = FileInputStream(caminho + "config.properties")
+        } catch (e: Exception) {
+            fis = FileInputStream(caminho1 + "config.properties")
+            caminho = caminho1
+        }
+        return fis
+    }
+
+
     fun loadProperties() {
         try {
-            properties = Properties()
-            val fis = FileInputStream(caminho + "config.properties")
-
+            val fis = getConfigFile()
             val isr = InputStreamReader(fis, Charset.forName("UTF-8"))
-                properties?.load(isr)
+            properties?.load(isr)
+            avanco = Integer.parseInt(properties.get("comecarNaLinha") as String?)
         } catch (e: IOException) {
             e.printStackTrace()
         }
+    }
+
+    fun writeAvanco() {
+        properties?.setProperty("comecarNaLinha", avanco.toString())
+        val fos = FileOutputStream(caminho + "config.properties")
+        properties.store(fos, null)
     }
 
     fun getProperties(properties: String): String {
@@ -51,6 +66,10 @@ object Utils {
 
     fun getFile(arquivo: String) : File {
         return File(caminho + arquivo)
+    }
+
+    fun getFile() : File {
+        return File(caminho + Utils.getProperties("arquivo"))
     }
 
     fun getArch(): Int {
@@ -87,7 +106,7 @@ object Utils {
         //faz o navegador abrir todos os links na mesma aba.
         ffOptions.addPreference("browser.link.open_newwindow", 1)
         ffOptions.setCapability("marionette", true)
-        val gecko = getGeckoDriver()
+        val gecko = getGeckoDriver() // binario/executavel q depende da plataforma
         println( gecko.canonicalPath)
         System.setProperty("webdriver.gecko.driver",  gecko.canonicalPath)
         val driver = FirefoxDriver(ffOptions)
