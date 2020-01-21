@@ -116,7 +116,7 @@ class CadastroUsuario(private val driver: WebDriver, private val usuarios: List<
         }
         this.email?.text.isNullOrBlank().let {
             this.email?.clear()
-            this.email?.sendKeys(usuario.email)
+            this.email?.sendKeys(usuario.email.toLowerCase())
         }
         val dropdown = Select(perfil)
         dropdown.selectByVisibleText("Publicador")
