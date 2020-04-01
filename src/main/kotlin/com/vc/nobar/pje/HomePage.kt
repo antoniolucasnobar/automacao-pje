@@ -1,5 +1,6 @@
-package com.nobar
+package com.vc.nobar.pje
 
+import com.vc.nobar.utils.Utils
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
@@ -20,7 +21,10 @@ class HomePage(private val driver: WebDriver) {
         PageFactory.initElements(driver, this)
     }
 
-    fun login(login: String, password: String) {
+    fun login() {
+        driver.get(Utils.getURL("urlLegado"))
+        val login = Utils.getProperties("loginPJe")
+        val password = Utils.getProperties("passwordPJe")
         userName?.sendKeys(login)
         passwordField?.sendKeys(password)
         botaoLogin?.click()

@@ -3,6 +3,7 @@ package com.vc.nobar.pje
 import com.nobar.*
 import com.vc.nobar.interfaces.ItemProcessamento
 import com.vc.nobar.interfaces.Acao
+import com.vc.nobar.utils.Utils
 import org.openqa.selenium.WebDriver
 import java.io.File
 
@@ -17,13 +18,15 @@ class Arquivamento(private val driver: WebDriver) : Acao {
     }
 
     override fun preparar() {
+        val homePage = HomePage(driver)
+        homePage.login()
         val papel = Utils.getProperties("papel")
         val papeis = Papeis(driver)
         papeis.trocar(papel)
     }
 
-    override fun executar(item: ItemProcessamento?) {
-        arquivar(item?.getItem().toString())
+    override fun executar() {
+        arquivarProcessos()
     }
 
     fun arquivar(processo: String) {
@@ -31,11 +34,11 @@ class Arquivamento(private val driver: WebDriver) : Acao {
         painelGlobal.abrirTarefa(processo)
 
         val tarefas = Tarefa(driver)
-        tarefas.mover(processo,"Análise")
-        tarefas.mover(processo,"Arquivar o processo")
+        tarefas.mover("Análise")
+        tarefas.mover("Arquivar o processo")
 
         val tarefasLegado = TarefaLegado(driver)
-        tarefasLegado.mover(processo, "Arquivar definitivamente")
+        tarefasLegado.mover( "Arquivar definitivamente")
 
 //        val tarefa = Utils.getProperties("tarefaArquivamento")
 //        val wait = WebDriverWait(driver, 10)

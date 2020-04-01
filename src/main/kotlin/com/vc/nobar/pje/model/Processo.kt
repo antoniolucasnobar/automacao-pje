@@ -1,4 +1,4 @@
-package com.vc.nobar.pje
+package com.vc.nobar.pje.model
 
 import com.poiji.annotation.ExcelCell
 import com.vc.nobar.interfaces.ItemProcessamento

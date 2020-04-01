@@ -1,4 +1,4 @@
-package com.nobar
+package com.vc.nobar.utils
 
 import org.apache.commons.lang3.SystemUtils
 import org.openqa.selenium.WebDriver
@@ -12,13 +12,15 @@ import java.util.concurrent.TimeUnit
 
 
 object Utils {
-    const val TIMEOUT = 60L
+    var TIMEOUT = 60L
     var msg = ""
     var convites: Int = 0;
     var avanco: Int = 0;
     private var properties = Properties()
     private const val caminho1 = "./src/main/resources/"
     private var caminho = "./"
+    private var errados = Properties()
+
 
     fun getConfigFile(): FileInputStream? {
         var fis: FileInputStream? = null
@@ -31,13 +33,21 @@ object Utils {
         return fis
     }
 
+//    fun getLogger(): Logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
+//
+//    fun getLogger(name: String): Logger = LoggerFactory.getLogger(name)
+
+
+
 
     fun loadProperties() {
         try {
             val fis = getConfigFile()
             val isr = InputStreamReader(fis, Charset.forName("UTF-8"))
             properties?.load(isr)
-            avanco = Integer.parseInt(properties.get("comecarNaLinha") as String?)
+            avanco = Integer.parseInt(properties["comecarNaLinha"] as String?)
+            val timeoutProperty = properties["timeout"]
+            timeoutProperty?.let { TIMEOUT = (timeoutProperty as String).toLong() }
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -55,12 +65,16 @@ object Utils {
     }
 
     fun getURL(caminho: String) : String {
-        return URI(getProperties("pageURL") + getProperties(caminho)).toString()
+        return URI(
+            getProperties("pageURL") + getProperties(
+                caminho
+            )
+        ).toString()
     }
 
     fun getProcessos(): List<String> {
         val lineList = mutableListOf<String>()
-       getFile( "processos.txt").useLines { lines -> lines.forEach { lineList.add(it.trim()) }}
+       getFile("processos.txt").useLines { lines -> lines.forEach { lineList.add(it.trim()) }}
         return lineList
     }
 
@@ -69,7 +83,11 @@ object Utils {
     }
 
     fun getFile() : File {
-        return File(caminho + Utils.getProperties("arquivo"))
+        return File(
+            caminho + getProperties(
+                "arquivo"
+            )
+        )
     }
 
     fun getArch(): Int {
@@ -105,12 +123,14 @@ object Utils {
         val ffOptions = FirefoxOptions()
         //faz o navegador abrir todos os links na mesma aba.
         ffOptions.addPreference("browser.link.open_newwindow", 1)
+        ffOptions.addPreference("devtools.selfxss.count", 100)
         ffOptions.setCapability("marionette", true)
-        val gecko = getGeckoDriver() // binario/executavel q depende da plataforma
+        val gecko =
+            getGeckoDriver() // binario/executavel q depende da plataforma
         println( gecko.canonicalPath)
         System.setProperty("webdriver.gecko.driver",  gecko.canonicalPath)
         val driver = FirefoxDriver(ffOptions)
-        driver.manage()?.timeouts()?.implicitlyWait(3, TimeUnit.SECONDS)
+        driver.manage()?.timeouts()?.implicitlyWait(5, TimeUnit.SECONDS)
         return driver
     }
 

@@ -18,7 +18,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 
 class TarefaLegado(private val driver: WebDriver) {
 
-    fun mover(processo: String, tarefaDestino: String) {
+    fun mover(tarefaDestino: String) {
         val wait = WebDriverWait(driver, 10)
 //        wait.until(
 //            ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='cdk-overlay-backdrop cdk-overlay-dark-backdrop cdk-overlay-backdrop-showing']"))

@@ -1,10 +1,10 @@
 package com.nobar
 
-import com.vc.nobar.interfaces.Acao
 import com.vc.nobar.dejt.DEJTCadastro
-import com.vc.nobar.pje.Arquivamento
-import com.vc.nobar.pje.NoDesvio
 import com.vc.nobar.gui.LoginScreen
+import com.vc.nobar.interfaces.Acao
+import com.vc.nobar.pje.*
+import com.vc.nobar.utils.Utils
 import org.openqa.selenium.WebDriver
 import tornadofx.App
 import kotlin.reflect.KClass
@@ -36,12 +36,26 @@ class LoginApp : App(LoginScreen::class)
 
 fun main(args: Array<String>) {
 
+//    val parentLogger: Logger = LogManager.getLogger()
+//
+//    parentLogger.error("log4j2 t1111a aqui!")
+//
+//    val logger = KotlinLogging.logger {}
+//    logger.debug { "hello message" }
+//    if (1 == (2 - 1)) return;
+
+
 //    Application.launch(LoginApp::class.java, *args)
 //    return;
-
+//    Utils.getLogger().debug("teste")
+//    Utils.getLogger().error("Reeeeou!")
 
     Utils.loadProperties()
     val driver = Utils.getDriver()
+
+CartasDevolvidas(driver).executar()
+
+    if (1 == (2 - 1)) return;
     val acoes = Utils.getProperties("acoes")
         .split(",")
     acoes.forEach { ac ->
@@ -49,7 +63,7 @@ fun main(args: Array<String>) {
 //        val acao = acaoEnum.kClass.constructors.first().call(driver)
         val acao = acaoEnum.getAcao(driver)
         println(acao)
-        acao.executar(null)
+        acao.executar()
     }
 ////    Thread.sleep(5000)
 ////    driver.close()
